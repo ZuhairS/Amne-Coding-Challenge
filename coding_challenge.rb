@@ -21,7 +21,6 @@ class SalesPattern
     @sale_prices[0..-@window_size].each_index do |idx|
       increasing_count = count_increasing_range(@sale_prices[idx...idx + @window_size])
       decreasing_count = count_decreasing_range(@sale_prices[idx...idx + @window_size])
-
       result << increasing_count - decreasing_count
     end
 
@@ -31,19 +30,39 @@ class SalesPattern
   private
 
   def count_increasing_range(prices)
-    count = 0
+    return 0 if prices.length < 2
+    cache = Array.new(@window_size, 0)
+
     prices.each_with_index do |price, idx|
       next if idx == 0
-      count += 1 if price > prices[idx - 1]
+      cache[idx] += 1 if price > prices[idx - 1]
     end
 
-    count += count_increasing_range(prices[1..-1])
-    p count
-    count
+    (1...prices.length).each do |curr_idx|
+      (0...curr_idx).each do |test_idx|
+        cache[curr_idx] += cache[test_idx] if prices[curr_idx] > prices[test_idx]
+      end
+    end
+
+    cache.reduce(:+)
   end
 
   def count_decreasing_range(prices)
-    2
+    return 0 if prices.length < 2
+    cache = Array.new(@window_size, 0)
+
+    prices.each_with_index do |price, idx|
+      next if idx == 0
+      cache[idx] += 1 if price < prices[idx - 1]
+    end
+
+    (1...prices.length).each do |curr_idx|
+      (0...curr_idx).each do |test_idx|
+        cache[curr_idx] += cache[test_idx] if prices[curr_idx] < prices[test_idx]
+      end
+    end
+
+    cache.reduce(:+)
   end
 
   def print_output(result)
