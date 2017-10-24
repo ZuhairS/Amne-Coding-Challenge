@@ -1,12 +1,3 @@
-# Input
-# 5 3
-# 188930 194123 201345 154243 154243
-
-# Output
-# 3
-# 0
-# -1
-
 class SalesPattern
 
   def initialize(input_file = "default_input.txt")
@@ -16,11 +7,16 @@ class SalesPattern
     find_pattern
   end
 
+  # Overall logic flow
   def find_pattern
     result = []
+
+    # Get increasing and decreasing subrange counts for specified
+    # window size for every element within acceptable window range
     @sale_prices[0..-@window_size].each_index do |idx|
       increasing_count = count_increasing_range(@sale_prices[idx...idx + @window_size])
       decreasing_count = count_decreasing_range(@sale_prices[idx...idx + @window_size])
+
       result << increasing_count - decreasing_count
     end
 
@@ -29,6 +25,10 @@ class SalesPattern
 
   private
 
+  # Counts total increasing subranges by keeping track of increasing
+  # subarrays and using the fact that there are sum(1..n) number of
+  # increasing subranges within one such subarray
+  # Time complexity of O(k), Space complexity O(1)
   def count_increasing_range(prices)
     return 0 if prices.length < 2
 
@@ -48,6 +48,7 @@ class SalesPattern
     total_count
   end
 
+  # Same as before but for decreasing ranges
   def count_decreasing_range(prices)
     return 0 if prices.length < 2
 
