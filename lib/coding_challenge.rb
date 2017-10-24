@@ -9,7 +9,7 @@
 
 class SalesPattern
 
-  def initialize(input_file = "input.txt")
+  def initialize(input_file = "default_input.txt")
     input_arr = File.readlines("data/#{input_file}").map(&:strip)
     @num_of_days, @window_size = input_arr.first.split(" ").map(&:to_i)
     @sale_prices = input_arr.last.split(" ").map(&:to_i)
@@ -66,5 +66,5 @@ class SalesPattern
 end
 
 if __FILE__ == $PROGRAM_NAME
-  SalesPattern.new
+  SalesPattern.new("test_input2.txt")
 end
