@@ -10,7 +10,7 @@
 class SalesPattern
 
   def initialize(input_file = "input.txt")
-    input_arr = File.readlines(input_file).map(&:strip)
+    input_arr = File.readlines("data/#{input_file}").map(&:strip)
     @num_of_days, @window_size = input_arr.first.split(" ").map(&:to_i)
     @sale_prices = input_arr.last.split(" ").map(&:to_i)
     find_pattern
@@ -31,44 +31,40 @@ class SalesPattern
 
   def count_increasing_range(prices)
     return 0 if prices.length < 2
-    cache = Array.new(@window_size, 0)
 
-    prices.each_with_index do |price, idx|
-      next if idx == 0
-      cache[idx] += 1 if price > prices[idx - 1]
-    end
+    count = 0
 
-    (1...prices.length).each do |curr_idx|
-      (0...curr_idx).each do |test_idx|
-        cache[curr_idx] += cache[test_idx] if prices[curr_idx] > prices[test_idx]
+    (0...prices.length - 1).each do |idx1|
+      (idx1 + 1...prices.length).each do |idx2|
+        break unless prices[idx2] > prices[idx2 - 1]
+        count += 1
       end
     end
 
-    cache.reduce(:+)
+    count
   end
 
   def count_decreasing_range(prices)
     return 0 if prices.length < 2
-    cache = Array.new(@window_size, 0)
 
-    prices.each_with_index do |price, idx|
-      next if idx == 0
-      cache[idx] += 1 if price < prices[idx - 1]
-    end
+    count = 0
 
-    (1...prices.length).each do |curr_idx|
-      (0...curr_idx).each do |test_idx|
-        cache[curr_idx] += cache[test_idx] if prices[curr_idx] < prices[test_idx]
+    (0...prices.length - 1).each do |idx1|
+      (idx1 + 1...prices.length).each do |idx2|
+        break unless prices[idx2] < prices[idx2 - 1]
+        count += 1
       end
     end
 
-    cache.reduce(:+)
+    count
   end
 
   def print_output(result)
-    File.write('output.txt', result.join("\n"))
+    File.write('data/output.txt', result.join("\n"))
   end
 
 end
 
-pattern = SalesPattern.new
+if __FILE__ == $PROGRAM_NAME
+  SalesPattern.new
+end
