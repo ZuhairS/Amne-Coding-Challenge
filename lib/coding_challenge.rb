@@ -32,31 +32,44 @@ class SalesPattern
   def count_increasing_range(prices)
     return 0 if prices.length < 2
 
-    count = 0
+    total_count, curr_count = 0, 0
 
-    (0...prices.length - 1).each do |idx1|
-      (idx1 + 1...prices.length).each do |idx2|
-        break unless prices[idx2] > prices[idx2 - 1]
-        count += 1
+    prices.each_with_index do |price, idx|
+      next if idx == 0
+      if price > prices[idx - 1]
+        curr_count += 1
+      else
+        total_count += range_summation(curr_count)
+        curr_count = 0
       end
     end
 
-    count
+    total_count += range_summation(curr_count)
+    total_count
   end
 
   def count_decreasing_range(prices)
     return 0 if prices.length < 2
 
-    count = 0
+    total_count, curr_count = 0, 0
 
-    (0...prices.length - 1).each do |idx1|
-      (idx1 + 1...prices.length).each do |idx2|
-        break unless prices[idx2] < prices[idx2 - 1]
-        count += 1
+    prices.each_with_index do |price, idx|
+      next if idx == 0
+      if price < prices[idx - 1]
+        curr_count += 1
+      else
+        total_count += range_summation(curr_count)
+        curr_count = 0
       end
     end
 
-    count
+    total_count += range_summation(curr_count)
+    total_count
+  end
+
+  # Efficiently calculates total sum of range 1..num
+  def range_summation(num)
+    num * (num + 1) / 2
   end
 
   def print_output(result)
@@ -66,5 +79,5 @@ class SalesPattern
 end
 
 if __FILE__ == $PROGRAM_NAME
-  SalesPattern.new("test_input2.txt")
+  SalesPattern.new
 end
