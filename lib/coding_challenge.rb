@@ -8,11 +8,13 @@ class SalesPattern
   end
 
   # Overall logic flow
+  # Time complexity O((N - k)*k)
   def find_pattern
     result = []
 
     # Get increasing and decreasing subrange counts for specified
     # window size for every element within acceptable window range
+    # Time complexity O(N - k)
     @sale_prices[0..-@window_size].each_index do |idx|
       increasing_count = count_increasing_range(@sale_prices[idx...idx + @window_size])
       decreasing_count = count_decreasing_range(@sale_prices[idx...idx + @window_size])
